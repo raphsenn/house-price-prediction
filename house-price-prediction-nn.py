@@ -42,10 +42,7 @@ def read_labled_data(file: str) -> tuple[np.array, np.array]:
         return X, y
 
 
-def sigmoid(x, derv=False):
-    if derv:
-        return x * ( 1 - x)
-
+def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
 def relu(x):
@@ -61,7 +58,7 @@ class NeuralNetwork:
         """
         """ 
         np.random.seed(42)
-        self.w1 = np.random.rand(input_size, 64)
+        self.w1 = np.random.rand(input_size, 64) 
         self.b1 = np.zeros(64) 
 
         self.w2 = np.random.rand(64, 1)
@@ -75,18 +72,19 @@ class NeuralNetwork:
             Z1 = np.dot(X, self.w1) + self.b1
             A1 = sigmoid(Z1)
             Z2 = np.dot(A1, self.w2) + self.b2
-            A2 = relu(Z2) 
+            A2 = Z2 # Predictions.
+            # A2 = relu(Z2) 
 
-            loss = np.mean((y.reshape(-1, 1) - A2) ** 2)
+            loss = np.mean((A2 - y.reshape(-1, 1))  ** 2)
             
             # Backpropagation. 
-            output_error = 2 * (y.reshape(-1, 1) - A2)
-            hidden_error = np.dot(output_error, self.w2.T) * A2 * (1 - A2)
+            output_error = 2 * (A2 - y.reshape(-1, 1))
+            hidden_error = np.dot(output_error, self.w2.T) * A1 * (1 - A1)
             
-            self.w2 += learning_rate * np.dot(A2.T, output_error) / len(y)           
-            self.b2 += learning_rate * np.sum(output_error) / len(y) 
-            self.w1 += learning_rate * np.dot(X.T, hidden_error) / len(y)           
-            self.b1 += learning_rate * np.sum(hidden_error) / len(y) 
+            self.w2 -= learning_rate * np.dot(A1.T, output_error) / len(y)           
+            self.b2 -= learning_rate * np.sum(output_error) / len(y) 
+            self.w1 -= learning_rate * np.dot(X.T, hidden_error) / len(y)           
+            self.b1 -= learning_rate * np.sum(hidden_error) / len(y) 
 
             if verbose:
                 if epoch % 1000 == 0:
@@ -98,37 +96,19 @@ class NeuralNetwork:
         Z1 = np.dot(X, self.w1) + self.b1
         A1 = sigmoid(Z1)
         Z2 = np.dot(A1, self.w2) + self.b2
-        A2 = relu(Z2) 
-        return A2
+        A2 = Z2 
+        return A2.ravel()
 
                 
-
     def evaluate(self, X, y):
         predictions = self.predict(X)
-        TP, TN, FP, FN = 0, 0, 0, 0
-        for i in range(len(y)):
-            if predictions[i] == 1 and y[i] == 1:
-                TP += 1
-            elif predictions[i] == 0 and  y[i] == 0:
-                TN += 1
-            elif predictions[i] == 1 and y[i] == 0:
-                FP += 1
-            else:
-                FN += 1
-        accuracy = (TP + TN) / (TP + TN + FP + FN) if TP + TN + FP + FN != 0 else 0
-        precision = TP / (TP + FP) if TP + FP != 0 else 0
-        recall = TP / (TP + FN) if TP + FP != 0 else 0
-        f1 = 2 * precision * recall / (precision + recall) if precision + recall != 0 else 0
-        return accuracy, precision, recall, f1
+        mse = np.mean((predictions - y) ** 2)
+        return mse
 
 
 if __name__ == '__main__':
     X_train, y_train = read_labled_data('Housing.csv')
     nn = NeuralNetwork(12)
-    nn.train(X_train, y_train, 100000, 0.1, True)
-    accuracy, precision, recall, f1 = nn.evaluate(X_train, y_train)
-    print()
-    print(f"accuracy = {round(accuracy * 100, 2)}%")
-    print(f"precision = {round(precision * 100, 2)}%")
-    print(f"recall = {round(recall * 100, 2)}%")
-    print(f"F1 = {round(f1 * 100, 2)}%")
+    nn.train(X_train, y_train, 10000, 0.001, True)
+    loss = nn.evaluate(X_train, y_train)
+    print(loss)
