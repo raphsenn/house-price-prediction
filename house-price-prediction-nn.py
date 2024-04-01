@@ -5,12 +5,33 @@ from sklearn.preprocessing import StandardScaler
 
 
 class NeuralNetwork:
-    def __init__(self, input_size: int=12) -> None:
-        self.w1 = np.zeros((input_size, 4))
-        self.b1 = np.zeros(4)
+    def __init__(self, neurons_input: int=12, neurons_hidden: int=4, neurons_output: int=1) -> None:
+        """
+        >>> NN = NeuralNetwork(12, 4, 1)
+        >>> NN.w1
+        array([[0., 0., 0., 0.],
+               [0., 0., 0., 0.],
+               [0., 0., 0., 0.],
+               [0., 0., 0., 0.],
+               [0., 0., 0., 0.],
+               [0., 0., 0., 0.],
+               [0., 0., 0., 0.],
+               [0., 0., 0., 0.],
+               [0., 0., 0., 0.],
+               [0., 0., 0., 0.],
+               [0., 0., 0., 0.],
+               [0., 0., 0., 0.]])
+        >>> NN.w2
+        array([[0.],
+               [0.],
+               [0.],
+               [0.]])
+        """ 
+        self.w1 = np.zeros((neurons_input, neurons_hidden))     # 12 x 4
+        self.b1 = np.zeros(neurons_hidden)                      # 4 x 1
 
-        self.w2 = np.zeros((4, 1))
-        self.b2 = np.zeros(1)
+        self.w2 = np.zeros((neurons_hidden, neurons_output))    # 4 x 1
+        self.b2 = np.zeros(neurons_output)                      # 1 x 1
 
     def sigmoid(self, x: np.array) -> np.array:
         return 1.0 / (1.0 + np.exp(-x))
@@ -20,11 +41,11 @@ class NeuralNetwork:
         """ 
         for epoch in range(epochs):
             # Forward propagation.
-            Z1 = np.dot(X, self.w1) + self.b1
-            A1 = self.sigmoid(Z1)
-            Z2 = np.dot(A1, self.w2) + self.b2
-            A2 = Z2 # Predictions.
-            
+            Z1 = np.dot(X, self.w1) + self.b1                   # 4 x 1
+            A1 = self.sigmoid(Z1)                               # 4 x 1
+            Z2 = np.dot(A1, self.w2) + self.b2                  # 1 x 1
+            A2 = Z2 # Predictions.                              # 1 x 1
+
             loss = np.mean((A2 - y.reshape(-1, 1)) ** 2)
 
             # Backpropagation. 
@@ -57,6 +78,7 @@ class NeuralNetwork:
         mse = np.mean((predictions - y) ** 2)
         return mse
 
+
 def read_labled_data(file: str) -> tuple[np.array, np.array]:
     X = [] # Inputs (area, bedrooms, bathrooms...).
     prices = []
@@ -82,6 +104,7 @@ def read_labled_data(file: str) -> tuple[np.array, np.array]:
         y = np.array(prices)
         return X, y
 
+
 def read_data(file: str) -> tuple[np.array, np.array]:
     boston = pd.read_csv(file, header=None, delimiter=r"\s+", names=['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT', 'MEDV'])
     X = boston.iloc[:,:-1]
@@ -94,9 +117,9 @@ def read_data(file: str) -> tuple[np.array, np.array]:
 
 
 if __name__ == '__main__':
-    # X_train, y_train = read_data('housing2.csv')
+    X_train, y_train = read_data('housing2.csv')
     # X_train, y_train = read_labled_data('Housing.csv')
-    X_train, y_train = read_labled_data('housing2.csv')
+    # X_train, y_train = read_labled_data('housing2.csv')
     print(X_train)
     nn = NeuralNetwork(13)
     nn.train(X_train, y_train, 5000, 0.001, True)
