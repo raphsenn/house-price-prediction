@@ -5,7 +5,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 class NeuralNetwork:
-    def __init__(self, neurons_input: int=12, neurons_hidden: int=4, neurons_output: int=1) -> None:
+    def __init__(self, input_neurons: int=12, hidden_neurons: int=4, output_neurons: int=1) -> None:
         """
         >>> NN = NeuralNetwork(12, 4, 1)
         >>> NN.w1
@@ -27,11 +27,11 @@ class NeuralNetwork:
                [0.],
                [0.]])
         """ 
-        self.w1 = np.zeros((neurons_input, neurons_hidden))     # 12 x 4
-        self.b1 = np.zeros(neurons_hidden)                      # 4 x 1
+        self.w1 = np.zeros((input_neurons, hidden_neurons))     # 12 x 4
+        self.b1 = np.zeros(hidden_neurons)                      # 4 x 1
 
-        self.w2 = np.zeros((neurons_hidden, neurons_output))    # 4 x 1
-        self.b2 = np.zeros(neurons_output)                      # 1 x 1
+        self.w2 = np.zeros((hidden_neurons, output_neurons))    # 4 x 1
+        self.b2 = np.zeros(output_neurons)                      # 1 x 1
 
     def sigmoid(self, x: np.array) -> np.array:
         return 1.0 / (1.0 + np.exp(-x))
