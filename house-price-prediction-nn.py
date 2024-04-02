@@ -7,9 +7,10 @@ from sklearn.preprocessing import StandardScaler
 class NeuralNetwork:
     def __init__(self, input_neurons: int=12, hidden_neurons: int=4, output_neurons: int=1) -> None:
         """
-        >>> NN = NeuralNetwork(12, 4, 1)
+        >>> NN = NeuralNetwork(13, 4, 1)
         >>> NN.w1
         array([[0., 0., 0., 0.],
+               [0., 0., 0., 0.],
                [0., 0., 0., 0.],
                [0., 0., 0., 0.],
                [0., 0., 0., 0.],
@@ -25,6 +26,7 @@ class NeuralNetwork:
         array([[0.],
                [0.],
                [0.],
+               [0.],
                [0.]])
         """ 
         self.w1 = np.zeros((input_neurons, hidden_neurons))     # 12 x 4
@@ -36,7 +38,7 @@ class NeuralNetwork:
     def sigmoid(self, x: np.array) -> np.array:
         return 1.0 / (1.0 + np.exp(-x))
 
-    def train(self, X: np.array, y: np.array, epochs: int=10, learning_rate: float=0.01, verbose: bool=False) -> None:
+    def train(self, X: np.array, y: np.array, epochs: int=5000, learning_rate: float=0.001, verbose: bool=False) -> None:
         """
         """ 
         for epoch in range(epochs):
@@ -45,7 +47,7 @@ class NeuralNetwork:
             A1 = self.sigmoid(Z1)                               # 4 x 1
             Z2 = np.dot(A1, self.w2) + self.b2                  # 1 x 1
             A2 = Z2 # Predictions.                              # 1 x 1
-
+            
             loss = np.mean((A2 - y.reshape(-1, 1)) ** 2)
 
             # Backpropagation. 
@@ -60,49 +62,36 @@ class NeuralNetwork:
             if verbose:
                 if epoch % 100 == 0:
                     print(f"Epoch {epoch}, Loss: {loss:.4f}")
-                    # print(f"{self.w1}")
-                    # print()
-                    # print(f"{self.w2}")
 
-    def predict(self, X: np.array) -> int:
+    def predict(self, X: np.array) -> np.array:
         # Forward propagation.
         Z1 = np.dot(X, self.w1) + self.b1
         A1 = self.sigmoid(Z1)
         Z2 = np.dot(A1, self.w2) + self.b2
         A2 = Z2 
-        return A2.ravel()
+        return A2
 
-                
-    def evaluate(self, X, y):
-        predictions = self.predict(X)
+    def evaluate(self, X: np.array, y: np.array) -> float:
+        predictions = self.predict(X).ravel()
         mse = np.mean((predictions - y) ** 2)
         return mse
 
 
 def read_labled_data(file: str) -> tuple[np.array, np.array]:
-    X = [] # Inputs (area, bedrooms, bathrooms...).
+    X = []
     prices = []
-    
-    # Mapping dictionary for categorical features
-    feature_mapping = {'yes': 1, 'no': 0, 'furnished': 1, 'semi-furnished': 0, 'unfurnished': -1}
-     
     with open(file, 'r') as file:
-        csvreader = csv.reader(file)
-        # Skip first line.
-        next(csvreader)
-        
-        for row in csvreader:
-            row = row[0].strip('[]').split()
-            price = float(row[13])
-            # price = int(row[0])
-            features = [float(feature_mapping[row[i]]) if row[i] in feature_mapping else float(row[i]) for i in range(0, len(row) -1)]
+        for line in file:
+            data = line.split()
+            features = [float(data[i]) for i in range(0, len(data) - 1)]
+            price = float(data[13])
             X.append(features)
             prices.append(price)
-        X = np.array(X)
-        scaler = StandardScaler() 
-        X = scaler.fit_transform(X) 
-        y = np.array(prices)
-        return X, y
+    X = np.array(X)
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+    y = np.array(prices)
+    return X, y
 
 
 def read_data(file: str) -> tuple[np.array, np.array]:
@@ -117,12 +106,18 @@ def read_data(file: str) -> tuple[np.array, np.array]:
 
 
 if __name__ == '__main__':
-    X_train, y_train = read_data('housing2.csv')
-    # X_train, y_train = read_labled_data('Housing.csv')
-    # X_train, y_train = read_labled_data('housing2.csv')
-    print(X_train)
+    # X_train, y_train = read_data('housing.csv')
+
+    X, y = read_labled_data('housing.csv')
+    # Split for training and testing data.
+    X_train, y_train = X[:405], y[:405] # training data.
+    X_test, y_test = X[405:], y[405:] # testing data.
+
+    # Create a NeuralNet. 
     nn = NeuralNetwork(13)
-    nn.train(X_train, y_train, 5000, 0.001, True)
-    
-    loss = nn.evaluate(X_train, y_train)
-    print(loss)
+    # Train the NeuralNet.
+    nn.train(X_train, y_train, 5000, 0.001, False)
+    # Evaluate on testing data. 
+    MSE = nn.evaluate(X_test, y_test)
+    RMSE = np.sqrt(MSE) 
+    print(f"Root mean squared error: {round(RMSE, 2)}")

@@ -2,8 +2,10 @@
 Simple Neural Network (raw python, just using numpy) to predict house prices over a kaggle dataset (Boston House Prices).
 
 ### About the dataset
-
-#### Boston House Prices
+The dataset contains information regarding housing prices in Boston, Massachusetts. 
+It encompasses various factors such as crime rate, nitric oxide concentration, and proportion of non-retail business acres per town, among others. 
+This dataset is derived from the original [Boston House Prices dataset](https://www.kaggle.com/datasets/vikrishnan/boston-house-prices), which was collected in 1978 by Harrison, D. and Rubinfeld, D.L.
+The goal of this dataset is to facilitate research and analysis in the field of housing market dynamics and predictive modeling. 
 
 ##### Content of the dataset
 - CRIM per capita crime rate by town 
@@ -21,9 +23,11 @@ Simple Neural Network (raw python, just using numpy) to predict house prices ove
 - LSTAT % lower status of the population 
 - MEDV Median value of owner-occupied homes in $1000's
 
-### About Neural-Network
+### About the Neural-Network
 
 <p float="left">
    <img src="./res/neuralnetwork.jpg">
 </p>
+
+
 
