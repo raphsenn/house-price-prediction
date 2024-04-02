@@ -21,6 +21,9 @@ Simple Neural Network (raw python, just using numpy) to predict house prices ove
 - LSTAT % lower status of the population 
 - MEDV Median value of owner-occupied homes in $1000's
 
+### About Neural-Network
 
-
+<p float="left">
+   <img src="./res/neuralnetwork.jpg">
+</p>
 
