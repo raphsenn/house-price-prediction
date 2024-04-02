@@ -1,6 +1,4 @@
 import numpy as np
-import csv
-import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
 
@@ -26,10 +24,9 @@ class NeuralNetwork:
         array([[0.],
                [0.],
                [0.],
-               [0.],
                [0.]])
         """ 
-        self.w1 = np.zeros((input_neurons, hidden_neurons))     # 12 x 4
+        self.w1 = np.zeros((input_neurons, hidden_neurons))     # 13 x 4
         self.b1 = np.zeros(hidden_neurons)                      # 4 x 1
 
         self.w2 = np.zeros((hidden_neurons, output_neurons))    # 4 x 1
@@ -43,11 +40,12 @@ class NeuralNetwork:
         """ 
         for epoch in range(epochs):
             # Forward propagation.
-            Z1 = np.dot(X, self.w1) + self.b1                   # 4 x 1
-            A1 = self.sigmoid(Z1)                               # 4 x 1
-            Z2 = np.dot(A1, self.w2) + self.b2                  # 1 x 1
-            A2 = Z2 # Predictions.                              # 1 x 1
-            
+            Z1 = np.dot(X, self.w1) + self.b1                   # 405 x 1
+            A1 = self.sigmoid(Z1)                               # 405 x 1
+            Z2 = np.dot(A1, self.w2) + self.b2                  # 1 x 405
+            A2 = Z2 # Predictions.                              # 1 x 405
+
+            # Calculate loss. 
             loss = np.mean((A2 - y.reshape(-1, 1)) ** 2)
 
             # Backpropagation. 
@@ -77,7 +75,22 @@ class NeuralNetwork:
         return mse
 
 
-def read_labled_data(file: str) -> tuple[np.array, np.array]:
+def read_data(file: str) -> tuple[np.array, np.array]:
+    """
+    >>> X, y = read_labled_data('housing-doctest.csv')
+    >>> X
+    array([[-1.41421308,  1.41421356, -1.41421356,  0.        ,  1.41421356,
+            -0.46074429, -0.42044647, -1.41421356, -1.41421356,  1.41421356,
+            -1.41421356,  0.70710678, -0.48217443],
+           [ 0.70811766, -0.70710678,  0.70710678,  0.        , -0.70710678,
+            -0.92755101,  1.37958998,  0.70710678,  0.70710678, -0.70710678,
+             0.70710678,  0.70710678,  1.39244766],
+           [ 0.70609543, -0.70710678,  0.70710678,  0.        , -0.70710678,
+             1.3882953 , -0.95914351,  0.70710678,  0.70710678, -0.70710678,
+             0.70710678, -1.41421356, -0.91027322]])
+    >>> y
+    array([24. , 21.6, 34.7])
+    """ 
     X = []
     prices = []
     with open(file, 'r') as file:
@@ -94,21 +107,9 @@ def read_labled_data(file: str) -> tuple[np.array, np.array]:
     return X, y
 
 
-def read_data(file: str) -> tuple[np.array, np.array]:
-    boston = pd.read_csv(file, header=None, delimiter=r"\s+", names=['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT', 'MEDV'])
-    X = boston.iloc[:,:-1]
-    y = boston.iloc[:, -1]
-    X = np.array(X)
-    y = np.array(y)
-    scaler = StandardScaler()
-    X = scaler.fit_transform(X) 
-    return X, y
-
-
 if __name__ == '__main__':
-    # X_train, y_train = read_data('housing.csv')
+    X, y = read_data('housing.csv')
 
-    X, y = read_labled_data('housing.csv')
     # Split for training and testing data.
     X_train, y_train = X[:405], y[:405] # training data.
     X_test, y_test = X[405:], y[405:] # testing data.
