@@ -30,7 +30,9 @@ The goal of this dataset is to facilitate research and analysis in the field of 
 </p>
 
 #### Parameters of the Neural-Network
-
+- 12 Input Neurons
+- 4 Hidden Neurons
+- 1 Output Neuron
 - Learning rate: 0.001
 - Epochs: 5000
 
