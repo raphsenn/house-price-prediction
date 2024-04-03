@@ -48,7 +48,11 @@ X_test, y_test = X[405:], y[405:] # 101 Values
 # Create the NeuralNet.
 neurons_input, neurons_hidden, neurons_output = 13, 4, 1
 NN = NeuralNetwork(neurons_input, neurons_hidden, neurons_output)
+
+# Train the NeuralNet.
 NN.train(X_train, y_train, 5000, 0.001)
+
+# Evaluate.
 MSE = NN.evaluate(X_test, y_test) # MSE for mean squared error
 RSE = np.sqrt(MSE) # RSE for root squared error
 print(RSE)
