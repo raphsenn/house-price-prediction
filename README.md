@@ -53,5 +53,6 @@ MSE = NN.evaluate(X_test, y_test) # MSE for mean squared error
 RSE = np.sqrt(MSE) # RSE for root squared error
 print(RSE)
 ```
-
-
+```shell
+Root mean squared error: 5.27
+```
