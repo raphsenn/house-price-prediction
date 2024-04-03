@@ -41,7 +41,7 @@ from house-price-prediction-nn import NeuralNetwork, read_data
 # Load the data.
 X, y = read_data('housing.csv')
 
-# Split data in training and testing data.
+# Split in training and testing data.
 X_train, y_train = X[:405], y[:405] # 405 Values
 X_test, y_test = X[405:], y[405:] # 101 Values
 
@@ -49,7 +49,9 @@ X_test, y_test = X[405:], y[405:] # 101 Values
 neurons_input, neurons_hidden, neurons_output = 13, 4, 1
 NN = NeuralNetwork(neurons_input, neurons_hidden, neurons_output)
 NN.train(X_train, y_train, 5000, 0.001)
-NN.evaluate(X_test, y_test)
+MSE = NN.evaluate(X_test, y_test) # MSE for mean squared error
+RSE = np.sqrt(MSE) # RSE for root squared error
+print(RSE)
 ```
 
 
