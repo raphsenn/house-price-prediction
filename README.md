@@ -26,7 +26,7 @@ The goal of this dataset is to facilitate research and analysis in the field of 
 ### About the Neural-Network
 
 <p float="left">
-   <img src="./res/NeuralNetwork.pdf">
+   <img src="./res/nn.png">
 </p>
 
 #### Parameters of the Neural-Network
