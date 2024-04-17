@@ -3,7 +3,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 class NeuralNetwork:
-    def __init__(self, input_neurons: int=12, hidden_neurons: int=4, output_neurons: int=1) -> None:
+    def __init__(self, input_neurons: int=12, hidden_neurons: int=8, output_neurons: int=1) -> None:
         """
         >>> NN = NeuralNetwork(13, 4, 1)
         >>> NN.w1
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     X_test, y_test = X[405:], y[405:] # testing data.
 
     # Create a NeuralNet. 
-    nn = NeuralNetwork(13)
+    nn = NeuralNetwork(13, 8, 1)
     # Train the NeuralNet.
     nn.train(X_train, y_train, 5000, 0.001, False)
     # Evaluate on testing data. 

@@ -29,13 +29,6 @@ The goal of this dataset is to facilitate research and analysis in the field of 
    <img src="./res/nn.png">
 </p>
 
-#### Parameters of the Neural-Network
-- 13 Input Neurons
-- 4 Hidden Neurons
-- 1 Output Neuron
-- Learning rate: 0.001
-- Epochs: 5000
-
 #### How to use
 
 ```python
@@ -48,7 +41,7 @@ X_train, y_train = X[:405], y[:405] # 405 Values
 X_test, y_test = X[405:], y[405:] # 101 Values
 
 # Create the NeuralNet.
-neurons_input, neurons_hidden, neurons_output = 13, 4, 1
+neurons_input, neurons_hidden, neurons_output = 13, 8, 1
 NN = NeuralNetwork(neurons_input, neurons_hidden, neurons_output)
 
 # Train the NeuralNet.
@@ -59,6 +52,13 @@ MSE = NN.evaluate(X_test, y_test) # MSE for mean squared error
 RSE = np.sqrt(MSE) # RSE for root squared error
 print(RSE)
 ```
+------------------
+#### Settings
+- Learning rate: 0.001
+- Epochs: 5000
+
+##### Result
 ```shell
-Root mean squared error: 5.27
+Root mean squared error: 5.11
 ```
+-----------------
