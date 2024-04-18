@@ -32,8 +32,15 @@ class NeuralNetwork:
         self.w2 = np.zeros((hidden_neurons, output_neurons))    # 4 x 1
         self.b2 = np.zeros(output_neurons)                      # 1 x 1
 
-    def sigmoid(self, x: np.array) -> np.array:
+    def sigmoid(self, x: np.array, derv:bool=False) -> np.array:
+        if derv:
+            return self.sigmoid(x) * (1 - self.sigmoid(x))
         return 1.0 / (1.0 + np.exp(-x))
+    
+    def relu(self, x: np.array, derv:bool=False) -> np.array:
+        if derv:
+            return x > 0
+        return np.maximum(0, x)
 
     def train(self, X: np.array, y: np.array, epochs: int=5000, learning_rate: float=0.001, verbose: bool=False) -> None:
         """
@@ -50,7 +57,7 @@ class NeuralNetwork:
 
             # Backpropagation. 
             output_error = 2 * (A2 - y.reshape(-1, 1))
-            hidden_error = np.dot(output_error, self.w2.T) * A1 * (1 - A1)
+            hidden_error = np.dot(output_error, self.w2.T) * self.sigmoid(Z1, derv=True)
 
             self.w2 -= learning_rate * np.dot(A1.T, output_error) / len(y)
             self.b2 -= learning_rate * np.sum(output_error) / len(y)
@@ -66,7 +73,7 @@ class NeuralNetwork:
         Z1 = np.dot(X, self.w1) + self.b1
         A1 = self.sigmoid(Z1)
         Z2 = np.dot(A1, self.w2) + self.b2
-        A2 = Z2 
+        A2 = Z2
         return A2
 
     def evaluate(self, X: np.array, y: np.array) -> float:
