@@ -29,6 +29,26 @@ The goal of this dataset is to facilitate research and analysis in the field of 
    <img src="./res/nn.png">
 </p>
 
+#### Forward propagation
+Propagate forward throw the neural net.
+<p float="left">
+   <img src="./res/forward.png">
+</p>
+
+
+#### Calculate error
+I use the MSE (Mean squared error) function.
+<p float="left">
+   <img src="./res/error.png">
+</p>
+
+
+#### Backpropagation
+<p float="left">
+   <img src="./res/backprop.png">
+</p>
+
+
 #### How to use
 
 ```python
