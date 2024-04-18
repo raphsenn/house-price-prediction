@@ -108,7 +108,7 @@ def read_data(file: str) -> tuple[np.array, np.array]:
 
 
 if __name__ == '__main__':
-    X, y = read_data('housing.csv')
+    X, y = read_data('tests/housing.csv')
 
     # Split for training and testing data.
     X_train, y_train = X[:405], y[:405] # training data.

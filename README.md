@@ -32,9 +32,9 @@ The goal of this dataset is to facilitate research and analysis in the field of 
 #### How to use
 
 ```python
-from house-price-prediction-nn import NeuralNetwork, read_data
+from neuralnet import NeuralNetwork, read_data
 # Load the data.
-X, y = read_data('housing.csv')
+X, y = read_data('/tests/housing.csv')
 
 # Split in training and testing data.
 X_train, y_train = X[:405], y[:405] # 405 Values
@@ -55,10 +55,10 @@ print(RSE)
 ------------------
 #### Settings
 - Learning rate: 0.001
-- Epochs: 5000
+- Epochs: 500
 
 ##### Result
 ```shell
-Root mean squared error: 5.11
+Root mean squared error: 3.69
 ```
 -----------------
