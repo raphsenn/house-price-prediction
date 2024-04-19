@@ -3,7 +3,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 class NeuralNetwork:
-    def __init__(self, input_neurons: int=12, hidden_neurons: int=8, output_neurons: int=1) -> None:
+    def __init__(self, input_neurons: int=13, hidden_neurons: int=8, output_neurons: int=1) -> None:
         """
         >>> NN = NeuralNetwork(13, 4, 1)
         >>> NN.w1
@@ -43,8 +43,6 @@ class NeuralNetwork:
         return np.maximum(0, x)
 
     def train(self, X: np.array, y: np.array, epochs: int=5000, learning_rate: float=0.001, verbose: bool=False) -> None:
-        """
-        """ 
         for epoch in range(epochs):
             # Forward propagation.
             Z1 = np.dot(X, self.w1) + self.b1                   # 405 x 1
